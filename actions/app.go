@@ -8,7 +8,6 @@ import (
 	"github.com/gobuffalo/x/sessions"
 	"github.com/unrolled/secure"
 
-	authuser "livegift_back/actions/auth"
 	"livegift_back/actions/middleware/authorization"
 	"livegift_back/models"
 
@@ -40,12 +39,7 @@ func App() *buffalo.App {
 
 		app.Use(authorization.Authorizator)
 
-		app.GET("/", HomeHandler)
-
-		authRoutes := app.Group("/auth")
-		authRoutes.POST("/login", authuser.AuthLogin)
-		authRoutes.POST("/signup", authuser.AuthRegister)
-		authRoutes.Middleware.Remove(authorization.Authorizator)
+		SetRoutes(app)
 	}
 
 	return app

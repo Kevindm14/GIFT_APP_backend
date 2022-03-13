@@ -18,7 +18,7 @@ import (
 func AuthLogin(c buffalo.Context) error {
 	tx, ok := c.Value("tx").(*pop.Connection)
 	if !ok {
-		return errors.New("Error trying to connnect to database")
+		return errors.New("error trying to connnect to database")
 	}
 
 	var user models.User
@@ -29,7 +29,7 @@ func AuthLogin(c buffalo.Context) error {
 	}
 
 	if err := tx.Where("email = ?", user.Email).First(&user); err != nil {
-		response.HTTPError(c.Response(), c.Request(), http.StatusBadRequest, err.Error())
+		response.HTTPError(c.Response(), c.Request(), http.StatusBadRequest, "Usuario no encontrado")
 
 		return errors.Unwrap(err)
 	}
@@ -56,7 +56,7 @@ func AuthLogin(c buffalo.Context) error {
 func AuthRegister(c buffalo.Context) error {
 	tx, ok := c.Value("tx").(*pop.Connection)
 	if !ok {
-		return errors.New("Error trying to connnect to database")
+		return errors.New("error trying to connnect to database")
 	}
 
 	var user models.User

@@ -1,0 +1,10 @@
+create_table("gifts"){
+  t.Column("id", "uuid", {"primary": true})
+  t.Column("code", "uuid", {})
+  t.Column("title", "string", {default: ""})
+  t.Column("video", "string", {})
+  t.Column("video_url", "text", {})
+  t.Column("qr", "string", {})
+
+  t.Timestamps()
+}

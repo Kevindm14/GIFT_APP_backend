@@ -22,10 +22,17 @@ require (
 	github.com/aymerick/douceur v0.2.0 // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible // indirect
 	github.com/felixge/httpsnoop v1.0.1 // indirect
+	github.com/gobuffalo/attrs v1.0.1 // indirect
+	github.com/gobuffalo/buffalo-pop v1.23.1 // indirect
+	github.com/gobuffalo/genny/v2 v2.0.8 // indirect
+	github.com/gobuffalo/here v0.6.0 // indirect
 	github.com/gobuffalo/pop/v6 v6.0.1 // indirect
 	github.com/gorilla/css v1.0.0 // indirect
 	github.com/gorilla/handlers v1.5.1 // indirect
+	golang.org/x/mod v0.5.0 // indirect
 	golang.org/x/term v0.0.0-20210927222741-03fcf44c2211 // indirect
+	golang.org/x/tools v0.1.7 // indirect
+	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
 )
 

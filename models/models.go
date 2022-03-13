@@ -18,5 +18,6 @@ func init() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
 	pop.Debug = env == "development"
 }

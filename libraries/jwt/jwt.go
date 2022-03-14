@@ -2,14 +2,14 @@ package jwt
 
 import (
 	"errors"
+	"fmt"
 	"time"
 
 	"github.com/dgrijalva/jwt-go/v4"
-	"github.com/gofrs/uuid"
 )
 
 type Claim struct {
-	ID uuid.UUID `json:"id"`
+	ID string `json:"id"`
 	jwt.StandardClaims
 }
 
@@ -35,13 +35,13 @@ func GetFromToken(tokenString, signingString string) (*Claim, error) {
 		return nil, errors.New("invalid claim")
 	}
 
-	iID, ok := claim["id"].(uuid.UUID)
+	iID, ok := claim["id"]
 	if !ok {
 		return nil, errors.New("user id not found")
 	}
 
 	claimObj := Claim{
-		iID,
+		fmt.Sprintf("%v", iID),
 		jwt.StandardClaims{
 			ExpiresAt: &jwt.Time{
 				Time: time.Now().AddDate(0, 0, 7),

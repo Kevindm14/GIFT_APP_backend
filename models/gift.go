@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/gobuffalo/buffalo"
 	"github.com/gobuffalo/buffalo/binding"
 	"github.com/gofrs/uuid"
 )
@@ -19,7 +20,7 @@ type Gift struct {
 	VideoURL  string `json:"videoURL" db:"video_url"`
 	Qr        string `json:"QR" db:"-"`
 
-	VideoFile binding.File `json:"videoFile" db:"-"`
+	VideoFile binding.File `json:"-" db:"-"`
 	ImageFile string       `json:"imageFile" db:"-"`
 
 	CreatedAt time.Time `json:"createdAt" db:"created_at"`
@@ -44,4 +45,9 @@ func (g Gifts) String() string {
 	}
 
 	return string(jg)
+}
+
+func (g *Gift) Init(params buffalo.ParamValues) {
+	g.Code = uuid.FromStringOrNil(params.Get("code"))
+	g.Title = params.Get("title")
 }

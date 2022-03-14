@@ -18,8 +18,11 @@ import (
 
 // ENV is used to help switch settings based on where the
 // application is being run. Default is "development".
-var ENV = envy.Get("GO_ENV", "development")
-var app *buffalo.App
+var (
+	baseURL = envy.Get("BASE_URL", "http://localhost:3000")
+	ENV     = envy.Get("GO_ENV", "development")
+	app     *buffalo.App
+)
 
 func App() *buffalo.App {
 	if app == nil {

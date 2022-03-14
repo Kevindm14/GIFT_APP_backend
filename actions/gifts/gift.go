@@ -1,14 +1,16 @@
 package gifts
 
 import (
-	"encoding/json"
 	"errors"
+	"fmt"
 	"livegift_back/libraries/response"
+	"livegift_back/libraries/storage"
 	"livegift_back/models"
 	"net/http"
 
 	"github.com/gobuffalo/buffalo"
-	"github.com/gobuffalo/pop"
+	"github.com/gobuffalo/buffalo/binding"
+	"github.com/gobuffalo/pop/v5"
 )
 
 func CreateGift(c buffalo.Context) error {
@@ -18,12 +20,27 @@ func CreateGift(c buffalo.Context) error {
 	}
 
 	var gift models.Gift
-	if err := json.NewDecoder(c.Request().Body).Decode(&gift); err != nil {
-		response.HTTPError(c.Response(), c.Request(), http.StatusBadRequest, err.Error())
 
-		return errors.Unwrap(err)
+	c.Request().ParseMultipartForm(10 * 1024 * 1024)
+	files, handler, err := c.Request().FormFile("videoFile")
+	if err != nil {
+		return err
 	}
 
+	defer files.Close()
+
+	file := binding.File{files, handler}
+	if handler != nil {
+		path, err := storage.Upload(c, file)
+		if err != nil {
+			fmt.Println("======================> Error Upload: ", err)
+			return err
+		}
+
+		gift.Video = path
+	}
+
+	gift.Init(c.Params())
 	mapJson := response.Map{
 		"gift":    gift,
 		"message": "El gift ha sido creado correctamente",

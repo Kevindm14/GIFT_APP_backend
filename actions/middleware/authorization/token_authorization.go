@@ -2,7 +2,6 @@ package authorization
 
 import (
 	"errors"
-	"fmt"
 	"strings"
 )
 
@@ -19,8 +18,6 @@ func tokenFromAuthorization(authorization string) (string, error) {
 	if len(l) != 2 {
 		return "", errors.New("invalid authorization format")
 	}
-
-	fmt.Println("============>TOKEN: ", l[1])
 
 	return l[1], nil
 }

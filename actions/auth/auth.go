@@ -38,7 +38,7 @@ func AuthLogin(c buffalo.Context) error {
 		return response.HTTPError(c.Response(), c.Request(), http.StatusBadRequest, "Password not match")
 	}
 
-	claim := jwt.Claim{ID: user.ID}
+	claim := jwt.Claim{ID: user.ID.String()}
 	token, err := claim.GetToken(os.Getenv("SIGNING_STRING"))
 	if err != nil {
 		return response.HTTPError(c.Response(), c.Request(), http.StatusInternalServerError, err.Error())
@@ -72,7 +72,7 @@ func AuthRegister(c buffalo.Context) error {
 		return errors.Unwrap(err)
 	}
 
-	claim := jwt.Claim{ID: user.ID}
+	claim := jwt.Claim{ID: user.ID.String()}
 	token, err := claim.GetToken(os.Getenv("SIGNING_STRING"))
 	if err != nil {
 		return response.HTTPError(c.Response(), c.Request(), http.StatusInternalServerError, err.Error())

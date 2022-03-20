@@ -5,6 +5,7 @@ import (
 	"livegift_back/libraries/response"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/gobuffalo/buffalo"
 )
@@ -26,7 +27,7 @@ func Authorizator(next buffalo.Handler) buffalo.Handler {
 			return response.HTTPError(c.Response(), c.Request(), http.StatusUnauthorized, err.Error())
 		}
 
-		c.Set("token", token)
+		c.Cookies().Set("token", token.ID, time.Duration(time.Now().Add(5*time.Minute).Unix()))
 		// response.JSON(c.Response(), c.Request(), http.StatusOK, response.Map{"token": token})
 
 		return next(c)

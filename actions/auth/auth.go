@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"log"
 	"os"
 
 	"livegift_back/libraries/jwt"
@@ -18,7 +19,7 @@ import (
 func AuthLogin(c buffalo.Context) error {
 	tx, ok := c.Value("tx").(*pop.Connection)
 	if !ok {
-		return errors.New("Error trying to connnect to database")
+		return errors.New("error trying to connnect to database")
 	}
 
 	var user models.User
@@ -29,16 +30,18 @@ func AuthLogin(c buffalo.Context) error {
 	}
 
 	if err := tx.Where("email = ?", user.Email).First(&user); err != nil {
-		response.HTTPError(c.Response(), c.Request(), http.StatusBadRequest, err.Error())
+		log.Println(errors.Unwrap(err))
 
-		return errors.Unwrap(err)
+		return response.HTTPError(c.Response(), c.Request(), http.StatusUnauthorized, "User not found")
 	}
 
 	if err := user.PasswordMatch(user.Password); !err {
-		return response.HTTPError(c.Response(), c.Request(), http.StatusBadRequest, "Password not match")
+		log.Println(errors.New("Password not match"))
+
+		return response.HTTPError(c.Response(), c.Request(), http.StatusUnauthorized, "Password not match")
 	}
 
-	claim := jwt.Claim{ID: user.ID}
+	claim := jwt.Claim{ID: user.ID.String()}
 	token, err := claim.GetToken(os.Getenv("SIGNING_STRING"))
 	if err != nil {
 		return response.HTTPError(c.Response(), c.Request(), http.StatusInternalServerError, err.Error())
@@ -56,23 +59,23 @@ func AuthLogin(c buffalo.Context) error {
 func AuthRegister(c buffalo.Context) error {
 	tx, ok := c.Value("tx").(*pop.Connection)
 	if !ok {
-		return errors.New("Error trying to connnect to database")
+		return errors.New("error trying to connnect to database")
 	}
 
 	var user models.User
 	if err := json.NewDecoder(c.Request().Body).Decode(&user); err != nil {
-		response.HTTPError(c.Response(), c.Request(), http.StatusBadRequest, err.Error())
+		response.HTTPError(c.Response(), c.Request(), http.StatusUnauthorized, err.Error())
 
 		return errors.Unwrap(err)
 	}
 
 	if err := tx.Create(&user); err != nil {
-		response.HTTPError(c.Response(), c.Request(), http.StatusBadRequest, err.Error())
+		response.HTTPError(c.Response(), c.Request(), http.StatusUnauthorized, err.Error())
 
 		return errors.Unwrap(err)
 	}
 
-	claim := jwt.Claim{ID: user.ID}
+	claim := jwt.Claim{ID: user.ID.String()}
 	token, err := claim.GetToken(os.Getenv("SIGNING_STRING"))
 	if err != nil {
 		return response.HTTPError(c.Response(), c.Request(), http.StatusInternalServerError, err.Error())

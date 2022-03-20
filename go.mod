@@ -20,11 +20,13 @@ require (
 
 require (
 	github.com/aymerick/douceur v0.2.0 // indirect
-	github.com/dgrijalva/jwt-go v3.2.0+incompatible // indirect
+	github.com/creasty/defaults v1.5.1 // indirect
 	github.com/felixge/httpsnoop v1.0.1 // indirect
 	github.com/gobuffalo/pop/v6 v6.0.1 // indirect
+	github.com/google/uuid v1.2.0 // indirect
 	github.com/gorilla/css v1.0.0 // indirect
 	github.com/gorilla/handlers v1.5.1 // indirect
+	github.com/gorilla/schema v1.2.0 // indirect
 	golang.org/x/term v0.0.0-20210927222741-03fcf44c2211 // indirect
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
 )
@@ -32,6 +34,7 @@ require (
 require (
 	github.com/BurntSushi/toml v1.0.0 // indirect
 	github.com/Masterminds/semver/v3 v3.1.1 // indirect
+	github.com/cloudinary/cloudinary-go v1.6.0
 	github.com/cockroachdb/cockroach-go v0.0.0-20190925194419-606b3d062051 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/dgrijalva/jwt-go/v4 v4.0.0-preview1
@@ -54,12 +57,11 @@ require (
 	github.com/gobuffalo/packd v1.0.1 // indirect
 	github.com/gobuffalo/plush v3.8.3+incompatible // indirect
 	github.com/gobuffalo/plush/v4 v4.1.9 // indirect
-	github.com/gobuffalo/pop v4.13.1+incompatible
+	github.com/gobuffalo/pop v4.13.1+incompatible // indirect
 	github.com/gobuffalo/tags/v3 v3.1.2 // indirect
 	github.com/gobuffalo/validate v2.0.4+incompatible // indirect
 	github.com/gobuffalo/validate/v3 v3.3.1 // indirect
 	github.com/gofrs/uuid v4.1.0+incompatible
-	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/gorilla/mux v1.8.0 // indirect
 	github.com/gorilla/securecookie v1.1.1 // indirect
 	github.com/gorilla/sessions v1.2.1 // indirect

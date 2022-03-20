@@ -8,7 +8,6 @@ import (
 	"github.com/gobuffalo/x/sessions"
 	"github.com/unrolled/secure"
 
-	authuser "livegift_back/actions/auth"
 	"livegift_back/actions/middleware/authorization"
 	"livegift_back/models"
 
@@ -19,17 +18,27 @@ import (
 
 // ENV is used to help switch settings based on where the
 // application is being run. Default is "development".
-var ENV = envy.Get("GO_ENV", "development")
-var app *buffalo.App
+var (
+	baseURL = envy.Get("BASE_URL", "http://localhost:3000")
+	ENV     = envy.Get("GO_ENV", "development")
+	app     *buffalo.App
+)
 
 func App() *buffalo.App {
 	if app == nil {
 		app = buffalo.New(buffalo.Options{
 			Env:          ENV,
 			SessionStore: sessions.Null{},
-			PreWares: []buffalo.PreWare{
-				cors.Default().Handler,
-			},
+			PreWares: []buffalo.PreWare{cors.New(cors.Options{
+				AllowedOrigins: []string{"*"},
+				AllowedMethods: []string{"GET", "POST", "PUT", "DELETE"},
+				AllowedHeaders: []string{
+					"Content-Type", "application/json",
+					"Authorization",
+				},
+				AllowCredentials: true,
+				Debug:            true,
+			}).Handler},
 			SessionName: "_livegift_back_session",
 		})
 
@@ -40,12 +49,7 @@ func App() *buffalo.App {
 
 		app.Use(authorization.Authorizator)
 
-		app.GET("/", HomeHandler)
-
-		authRoutes := app.Group("/auth")
-		authRoutes.POST("/login", authuser.AuthLogin)
-		authRoutes.POST("/signup", authuser.AuthRegister)
-		authRoutes.Middleware.Remove(authorization.Authorizator)
+		SetRoutes(app)
 	}
 
 	return app

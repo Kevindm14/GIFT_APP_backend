@@ -29,9 +29,16 @@ func App() *buffalo.App {
 		app = buffalo.New(buffalo.Options{
 			Env:          ENV,
 			SessionStore: sessions.Null{},
-			PreWares: []buffalo.PreWare{
-				cors.Default().Handler,
-			},
+			PreWares: []buffalo.PreWare{cors.New(cors.Options{
+				AllowedOrigins: []string{"*"},
+				AllowedMethods: []string{"GET", "POST", "PUT", "DELETE"},
+				AllowedHeaders: []string{
+					"Content-Type", "application/json",
+					"Authorization",
+				},
+				AllowCredentials: true,
+				Debug:            true,
+			}).Handler},
 			SessionName: "_livegift_back_session",
 		})
 

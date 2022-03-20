@@ -13,6 +13,11 @@ import (
 	"github.com/gobuffalo/pop/v5"
 )
 
+func ListGift(c buffalo.Context) error {
+
+	return nil
+}
+
 func CreateGift(c buffalo.Context) error {
 	_, ok := c.Value("tx").(*pop.Connection)
 	if !ok {

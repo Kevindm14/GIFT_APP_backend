@@ -14,6 +14,7 @@ type Map map[string]interface{}
 func JSON(w http.ResponseWriter, r *http.Request, statusCode int, data interface{}) error {
 	if data == nil {
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
+
 		w.WriteHeader(statusCode)
 		return nil
 	}

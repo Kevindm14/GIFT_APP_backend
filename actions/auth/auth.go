@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"log"
 	"os"
 
 	"livegift_back/libraries/jwt"
@@ -29,13 +30,15 @@ func AuthLogin(c buffalo.Context) error {
 	}
 
 	if err := tx.Where("email = ?", user.Email).First(&user); err != nil {
-		response.HTTPError(c.Response(), c.Request(), http.StatusBadRequest, "Usuario no encontrado")
+		log.Println(errors.Unwrap(err))
 
-		return errors.Unwrap(err)
+		return response.HTTPError(c.Response(), c.Request(), http.StatusUnauthorized, "User not found")
 	}
 
 	if err := user.PasswordMatch(user.Password); !err {
-		return response.HTTPError(c.Response(), c.Request(), http.StatusBadRequest, "Password not match")
+		log.Println(errors.New("Password not match"))
+
+		return response.HTTPError(c.Response(), c.Request(), http.StatusUnauthorized, "Password not match")
 	}
 
 	claim := jwt.Claim{ID: user.ID.String()}
@@ -61,13 +64,13 @@ func AuthRegister(c buffalo.Context) error {
 
 	var user models.User
 	if err := json.NewDecoder(c.Request().Body).Decode(&user); err != nil {
-		response.HTTPError(c.Response(), c.Request(), http.StatusBadRequest, err.Error())
+		response.HTTPError(c.Response(), c.Request(), http.StatusUnauthorized, err.Error())
 
 		return errors.Unwrap(err)
 	}
 
 	if err := tx.Create(&user); err != nil {
-		response.HTTPError(c.Response(), c.Request(), http.StatusBadRequest, err.Error())
+		response.HTTPError(c.Response(), c.Request(), http.StatusUnauthorized, err.Error())
 
 		return errors.Unwrap(err)
 	}

@@ -4,6 +4,7 @@ import (
 	authuser "livegift_back/actions/auth"
 	"livegift_back/actions/gifts"
 	"livegift_back/actions/middleware/authorization"
+	"livegift_back/actions/users"
 
 	"github.com/gobuffalo/buffalo"
 )
@@ -18,6 +19,9 @@ func SetRoutes(app *buffalo.App) *buffalo.App {
 
 	giftRoutes := app.Group("/gift")
 	giftRoutes.POST("/create", gifts.CreateGift)
+
+	userRoutes := app.Group("/users")
+	userRoutes.GET("/", users.Index)
 
 	return app
 }

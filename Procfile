@@ -1,1 +1,1 @@
-web: web: ./bin/livegift_back
+web: ./bin/livegift_back

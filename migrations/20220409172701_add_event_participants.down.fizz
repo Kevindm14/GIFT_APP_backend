@@ -1,0 +1,4 @@
+drop_foreign_key("event_participants", "event_participants_id_fk_event_id", {"if_exists": true})
+drop_foreign_key("event_participants", "event_participants_id_fk_user_id", {"if_exists": true})
+
+drop_table("event_participants")

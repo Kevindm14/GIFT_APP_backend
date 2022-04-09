@@ -29,6 +29,8 @@ func AuthLogin(c buffalo.Context) error {
 		return errors.Unwrap(err)
 	}
 
+	fmt.Println("================>", user)
+
 	if err := tx.Where("email = ?", user.Email).First(&user); err != nil {
 		log.Println(errors.Unwrap(err))
 

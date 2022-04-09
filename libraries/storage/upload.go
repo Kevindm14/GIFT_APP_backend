@@ -22,10 +22,10 @@ func (r remoteManager) UploadByte(file []byte, name string) (string, error) {
 	panic("unimplemented")
 }
 
-func (r remoteManager) Upload(ctx context.Context, file binding.File) (string, error) {
+func (r remoteManager) Upload(ctx context.Context, file binding.File) (string, string, error) {
 	cld, err := cloudinary.NewFromParams(os.Getenv("CLOUD_NAME"), os.Getenv("API_KEY"), os.Getenv("API_SECRET"))
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
 
 	ext := filepath.Ext(file.Filename)
@@ -40,21 +40,21 @@ func (r remoteManager) Upload(ctx context.Context, file binding.File) (string, e
 	defer new.Close()
 
 	if _, err := io.Copy(new, file.File); err != nil {
-		return "", err
+		return "", "", err
 	}
 
 	resp, err := cld.Upload.Upload(ctx, pathFolder, uploader.UploadParams{})
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
 
 	if err := os.Remove(pathFolder); err != nil {
-		return "", err
+		return "", "", err
 	}
 
 	log.Println(resp.SecureURL)
 
-	return path, nil
+	return resp.SecureURL, path, nil
 }
 
 func (r remoteManager) AccessURLFor(path string) (string, error) {

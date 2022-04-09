@@ -6,6 +6,7 @@ development:
   password: postgres
   host: 127.0.0.1
   pool: 5
+  # url: {{envOr "DATABASE_URL" "postgres://slvjtpvoyxjyff:1e5aa9e6edf8e58be2b069296e4b580a14a90c774f1f185a87ebd02aa13d1881@ec2-34-238-37-113.compute-1.amazonaws.com:5432/d4pqmcnn0qpcuk"}}
 
 test:
   url: {{envOr "TEST_DATABASE_URL" "postgres://postgres:postgres@127.0.0.1:5432/livegift_back_test?sslmode=disable"}}

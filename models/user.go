@@ -21,6 +21,8 @@ type User struct {
 	PhoneNumber    string    `json:"phone_number" db:"phone_number"`
 	PhoneExtension string    `json:"phone_extension" db:"phone_extension"`
 
+	Events Events `has_many:"events"`
+
 	CreatedAt time.Time `json:"created_at" db:"created_at"`
 	UpdatedAt time.Time `json:"updated_at" db:"updated_at"`
 }

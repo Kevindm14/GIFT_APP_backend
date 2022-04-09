@@ -1,0 +1,19 @@
+create_table("event_participants"){
+  t.Column("id", "uuid", {"primary": true})
+  t.Column("user_id", "uuid", {})
+  t.Column("event_id", "uuid", {})
+
+  t.Timestamps()
+}
+
+add_foreign_key("event_participants", "event_id", {"events": ["id"]}, {
+  "name": "event_participants_id_fk_event_id",
+  "on_delete": "CASCADE",
+  "on_update": "CASCADE",
+})
+
+add_foreign_key("event_participants", "user_id", {"users": ["id"]}, {
+  "name": "event_participants_id_fk_user_id",
+  "on_delete": "CASCADE",
+  "on_update": "CASCADE",
+})

@@ -14,11 +14,10 @@ type Gift struct {
 	ID   uuid.UUID `json:"id" db:"id"`
 	Code uuid.UUID `json:"code" db:"code"`
 
-	Title     string `json:"title" db:"title"`
-	Video     string `json:"video" db:"video"`
-	Reference int    `json:"reference" db:"reference" rw:"r"`
-	VideoURL  string `json:"videoURL" db:"video_url"`
-	Qr        string `json:"QR" db:"-"`
+	Title    string `json:"title" db:"title"`
+	Video    string `json:"video" db:"video"`
+	VideoURL string `json:"videoURL" db:"video_url"`
+	Qr       string `json:"qr" db:"qr"`
 
 	VideoFile binding.File `json:"-" db:"-"`
 	ImageFile string       `json:"imageFile" db:"-"`

@@ -2,6 +2,7 @@ package actions
 
 import (
 	authuser "livegift_back/actions/auth"
+	"livegift_back/actions/events"
 	"livegift_back/actions/gifts"
 	"livegift_back/actions/middleware/authorization"
 	"livegift_back/actions/users"
@@ -17,11 +18,15 @@ func SetRoutes(app *buffalo.App) *buffalo.App {
 	authRoutes.POST("/signup", authuser.AuthRegister)
 	authRoutes.Middleware.Remove(authorization.Authorizator)
 
-	giftRoutes := app.Group("/gift")
+	giftRoutes := app.Group("/gifts")
+	giftRoutes.GET("/", gifts.ListGift)
 	giftRoutes.POST("/create", gifts.CreateGift)
 
 	userRoutes := app.Group("/users")
 	userRoutes.GET("/", users.Index)
+
+	eventRoutes := app.Group("/events")
+	eventRoutes.GET("/", events.Index)
 
 	return app
 }

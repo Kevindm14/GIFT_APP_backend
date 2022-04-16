@@ -13,12 +13,14 @@ type Event struct {
 	GiftID uuid.UUID `json:"gift_id" db:"gift_id"`
 
 	Title       string    `json:"title" db:"title"`
-	Description string    `json:"video" db:"video"`
+	Description string    `json:"description" db:"description"`
 	Date        time.Time `json:"date" db:"date"`
 	Sent        bool      `json:"sent" db:"sent"`
 
-	Participants Participants `belongs_to:"users" fk_id:"UserID"`
-	Gift         Gift         `belongs_to:"gifts" fk_id:""`
+	ParticipantsIDs []uuid.UUID `json:"participants_ids" db:"-"`
+
+	Participants Participants `json:"participants" many_to_many:"event_participants"`
+	Gift         Gift         `belongs_to:"gifts" fk_id:"GiftID"`
 
 	CreatedAt time.Time `json:"createdAt" db:"created_at"`
 	UpdatedAt time.Time `json:"updatedAt" db:"updated_at"`

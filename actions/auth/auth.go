@@ -29,8 +29,6 @@ func AuthLogin(c buffalo.Context) error {
 		return errors.Unwrap(err)
 	}
 
-	fmt.Println("================>", user)
-
 	if err := tx.Where("email = ?", user.Email).First(&user); err != nil {
 		log.Println(errors.Unwrap(err))
 
@@ -53,6 +51,7 @@ func AuthLogin(c buffalo.Context) error {
 		"token":   token,
 		"user":    user,
 		"message": fmt.Sprintf("Bienvenido nuevamente %v", user.FirstName),
+		"status":  http.StatusOK,
 	}
 
 	return response.JSON(c.Response(), c.Request(), http.StatusCreated, mapJson)

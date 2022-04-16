@@ -2,6 +2,7 @@ package gifts
 
 import (
 	"errors"
+	"livegift_back/libraries/qr"
 	"livegift_back/libraries/response"
 	"livegift_back/libraries/storage"
 	"livegift_back/models"
@@ -9,9 +10,31 @@ import (
 
 	"github.com/gobuffalo/buffalo"
 	"github.com/gobuffalo/buffalo/binding"
+	"github.com/gobuffalo/envy"
 	"github.com/gobuffalo/pop/v5"
 	"github.com/gofrs/uuid"
 )
+
+var (
+	baseURL = envy.Get("BASE_URL", "http://localhost:3000")
+	ENV     = envy.Get("GO_ENV", "development")
+)
+
+func GenerateQRCode(c buffalo.Context) error {
+	gift := models.Gift{Code: uuid.Must(uuid.NewV4())}
+	image, err := qr.CodeForGift(baseURL, gift.Code.String())
+	if err != nil {
+		return err
+	}
+
+	mapJson := response.Map{
+		"status":  http.StatusCreated,
+		"qrImage": image,
+		"giftID":  gift.Code.String(),
+	}
+
+	return response.JSON(c.Response(), c.Request(), http.StatusCreated, mapJson)
+}
 
 func ListGift(c buffalo.Context) error {
 	tx, ok := c.Value("tx").(*pop.Connection)
@@ -61,8 +84,9 @@ func CreateGift(c buffalo.Context) error {
 		gift.VideoURL = secureURL
 	}
 
-	gift.Code = uuid.Must(uuid.NewV4())
+	gift.Code = uuid.FromStringOrNil(c.Request().FormValue("code"))
 	gift.Title = c.Request().FormValue("title")
+	gift.Qr = c.Request().FormValue("qr")
 
 	if err := tx.Create(&gift); err != nil {
 		return err
@@ -71,6 +95,7 @@ func CreateGift(c buffalo.Context) error {
 	mapJson := response.Map{
 		"status":  http.StatusCreated,
 		"message": "El gift ha sido creado correctamente",
+		"gift":    gift,
 	}
 
 	return response.JSON(c.Response(), c.Request(), http.StatusCreated, mapJson)

@@ -51,3 +51,26 @@ func Create(c buffalo.Context) error {
 
 	return response.JSON(c.Response(), c.Request(), http.StatusCreated, mapJson)
 }
+
+func DeleteEvent(c buffalo.Context) error {
+	tx, ok := c.Value("tx").(*pop.Connection)
+	if !ok {
+		return errors.New("error trying to connnect to database")
+	}
+
+	event := models.Event{}
+	if err := tx.Find(&event, c.Request().FormValue("event_id")); err != nil {
+		return err
+	}
+
+	if err := tx.Destroy(&event); err != nil {
+		return err
+	}
+
+	mapJson := response.Map{
+		"status":  http.StatusOK,
+		"message": "El Evento ha sido eliminado correctamente",
+	}
+
+	return response.JSON(c.Response(), c.Request(), http.StatusOK, mapJson)
+}

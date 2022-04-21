@@ -1,12 +1,11 @@
 # This is a multi-stage Dockerfile and requires >= Docker 17.05
 # https://docs.docker.com/engine/userguide/eng-image/multistage-build/
-FROM gobuffalo/buffalo:v0.16.17 as builder
+FROM gobuffalo/buffalo:v0.18.3 as builder
 
-ENV GO111MODULE on
 ENV GOPROXY http://proxy.golang.org
 
-RUN mkdir -p /src/projects
-WORKDIR /src/projects
+RUN mkdir -p /src/livegift_back
+WORKDIR /src/livegift_back
 
 # Copy the Go Modules manifests
 COPY go.mod go.mod

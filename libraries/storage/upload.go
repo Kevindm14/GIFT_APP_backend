@@ -13,6 +13,7 @@ import (
 	"github.com/cloudinary/cloudinary-go/api/uploader"
 	"github.com/gobuffalo/buffalo/binding"
 	"github.com/gofrs/uuid"
+	"github.com/sirupsen/logrus"
 )
 
 type remoteManager struct{}
@@ -32,7 +33,7 @@ func (r remoteManager) Upload(ctx context.Context, file binding.File) (string, s
 	path := fmt.Sprintf("%v%v", uuid.Must(uuid.NewV4()), ext)
 	path = strings.ToLower(path)
 
-	pathFolder := fmt.Sprintf("./public/%v", path)
+	pathFolder := fmt.Sprintf(path)
 	new, err := os.Create(pathFolder)
 	if err != nil {
 		log.Fatal(err)
@@ -53,6 +54,7 @@ func (r remoteManager) Upload(ctx context.Context, file binding.File) (string, s
 	}
 
 	log.Println(resp.SecureURL)
+	logrus.Infof("> Uploaded To: %v", resp.SecureURL)
 
 	return resp.SecureURL, path, nil
 }

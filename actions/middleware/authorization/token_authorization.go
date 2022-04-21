@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-func tokenFromAuthorization(authorization string) (string, error) {
+func TokenFromAuthorization(authorization string) (string, error) {
 	if authorization == "" {
 		return "", errors.New("authorization is required")
 	}

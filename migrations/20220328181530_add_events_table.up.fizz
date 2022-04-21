@@ -3,6 +3,7 @@ create_table("events"){
   t.Column("title", "string", {default: ""})
   t.Column("description", "string", {default: ""})
   t.Column("gift_id", "uuid", {})
+  t.Column("user_id", "uuid", {})
   t.Column("date", "date", {})
   t.Column("sent", "bool", {default: false})
 
@@ -11,6 +12,12 @@ create_table("events"){
 
 add_foreign_key("events", "gift_id", {"gifts": ["id"]}, {
     "name": "events_id_fk_gift_id",
+    "on_delete": "CASCADE",
+    "on_update": "CASCADE",
+})
+
+add_foreign_key("events", "user_id", {"users": ["id"]}, {
+    "name": "events_id_fk_user_id",
     "on_delete": "CASCADE",
     "on_update": "CASCADE",
 })

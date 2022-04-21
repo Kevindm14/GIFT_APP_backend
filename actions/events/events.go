@@ -3,13 +3,17 @@ package events
 import (
 	"encoding/json"
 	"errors"
+	"livegift_back/actions/middleware/authorization"
 	"livegift_back/libraries/response"
 	"livegift_back/models"
 	"log"
 	"net/http"
+	"os"
 
+	"github.com/dgrijalva/jwt-go/v4"
 	"github.com/gobuffalo/buffalo"
 	"github.com/gobuffalo/pop/v5"
+	"github.com/gofrs/uuid"
 )
 
 func Index(c buffalo.Context) error {
@@ -18,8 +22,23 @@ func Index(c buffalo.Context) error {
 		return errors.New("error trying to connect database")
 	}
 
-	var events models.Events
-	if err := tx.All(&events); err != nil {
+	authorizationHeader := c.Request().Header.Get("Authorization")
+	token, err := authorization.TokenFromAuthorization(authorizationHeader)
+	if err != nil {
+		return err
+	}
+
+	claims := jwt.MapClaims{}
+	_, err2 := jwt.ParseWithClaims(token, claims, func(tokenMap *jwt.Token) (interface{}, error) {
+		return []byte(os.Getenv("SIGNING_STRING")), nil
+	})
+
+	if err2 != nil {
+		return err
+	}
+
+	events := models.Events{}
+	if err := tx.Where("user_id = ?", claims["id"]).EagerPreload("Gift", "User", "User.Events").All(&events); err != nil {
 		log.Println(err)
 		return err
 	}
@@ -34,6 +53,7 @@ func Create(c buffalo.Context) error {
 	}
 
 	event := models.Event{}
+	event.UserID = uuid.FromStringOrNil(c.Request().FormValue("user_id"))
 	if err := json.NewDecoder(c.Request().Body).Decode(&event); err != nil {
 		response.HTTPError(c.Response(), c.Request(), http.StatusUnauthorized, err.Error())
 

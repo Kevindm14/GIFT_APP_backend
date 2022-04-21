@@ -20,6 +20,7 @@ func SetRoutes(app *buffalo.App) *buffalo.App {
 
 	giftRoutes := app.Group("/gifts")
 	giftRoutes.GET("/", gifts.ListGift)
+	giftRoutes.GET("/{user_id}", gifts.ListGiftsUsers)
 	giftRoutes.GET("/qr/view", gifts.GenerateQRCode)
 	giftRoutes.POST("/create", gifts.CreateGift)
 	giftRoutes.DELETE("/delete/", gifts.DeleteGift)

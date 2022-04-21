@@ -30,9 +30,9 @@ func AuthLogin(c buffalo.Context) error {
 	}
 
 	if err := tx.Where("email = ?", user.Email).First(&user); err != nil {
-		log.Println(errors.Unwrap(err))
+		log.Println(errors.New("user not found"))
 
-		return response.HTTPError(c.Response(), c.Request(), http.StatusUnauthorized, "User not found")
+		return response.JSON(c.Response(), c.Request(), http.StatusNotFound, response.Map{"Message": "El usuario no existe"})
 	}
 
 	if err := user.PasswordMatch(user.Password); !err {
@@ -86,6 +86,7 @@ func AuthRegister(c buffalo.Context) error {
 		"token":   token,
 		"user":    user,
 		"message": fmt.Sprintf("El usuario %v ha sido creado correctamente", user.FirstName),
+		"status":  http.StatusCreated,
 	}
 
 	return response.JSON(c.Response(), c.Request(), http.StatusCreated, mapJson)

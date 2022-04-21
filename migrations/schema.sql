@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 13.6
+-- Dumped from database version 13.6 (Ubuntu 13.6-1.pgdg20.04+1)
 -- Dumped by pg_dump version 13.6
 
 SET statement_timeout = 0;
@@ -21,7 +21,7 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
--- Name: event_participants; Type: TABLE; Schema: public; Owner: postgres
+-- Name: event_participants; Type: TABLE; Schema: public; Owner: slvjtpvoyxjyff
 --
 
 CREATE TABLE public.event_participants (
@@ -33,10 +33,10 @@ CREATE TABLE public.event_participants (
 );
 
 
-ALTER TABLE public.event_participants OWNER TO postgres;
+ALTER TABLE public.event_participants OWNER TO slvjtpvoyxjyff;
 
 --
--- Name: events; Type: TABLE; Schema: public; Owner: postgres
+-- Name: events; Type: TABLE; Schema: public; Owner: slvjtpvoyxjyff
 --
 
 CREATE TABLE public.events (
@@ -44,6 +44,7 @@ CREATE TABLE public.events (
     title character varying(255) DEFAULT ''::character varying NOT NULL,
     description character varying(255) DEFAULT ''::character varying NOT NULL,
     gift_id uuid NOT NULL,
+    user_id uuid NOT NULL,
     date date NOT NULL,
     sent boolean DEFAULT false NOT NULL,
     created_at timestamp without time zone NOT NULL,
@@ -51,10 +52,10 @@ CREATE TABLE public.events (
 );
 
 
-ALTER TABLE public.events OWNER TO postgres;
+ALTER TABLE public.events OWNER TO slvjtpvoyxjyff;
 
 --
--- Name: gifts; Type: TABLE; Schema: public; Owner: postgres
+-- Name: gifts; Type: TABLE; Schema: public; Owner: slvjtpvoyxjyff
 --
 
 CREATE TABLE public.gifts (
@@ -63,16 +64,17 @@ CREATE TABLE public.gifts (
     title character varying(255) DEFAULT ''::character varying NOT NULL,
     video character varying(255) NOT NULL,
     video_url text NOT NULL,
-    qr character varying(255) NOT NULL,
+    qr text NOT NULL,
+    user_id uuid NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
 );
 
 
-ALTER TABLE public.gifts OWNER TO postgres;
+ALTER TABLE public.gifts OWNER TO slvjtpvoyxjyff;
 
 --
--- Name: participants; Type: TABLE; Schema: public; Owner: postgres
+-- Name: participants; Type: TABLE; Schema: public; Owner: slvjtpvoyxjyff
 --
 
 CREATE TABLE public.participants (
@@ -85,10 +87,10 @@ CREATE TABLE public.participants (
 );
 
 
-ALTER TABLE public.participants OWNER TO postgres;
+ALTER TABLE public.participants OWNER TO slvjtpvoyxjyff;
 
 --
--- Name: schema_migration; Type: TABLE; Schema: public; Owner: postgres
+-- Name: schema_migration; Type: TABLE; Schema: public; Owner: slvjtpvoyxjyff
 --
 
 CREATE TABLE public.schema_migration (
@@ -96,10 +98,10 @@ CREATE TABLE public.schema_migration (
 );
 
 
-ALTER TABLE public.schema_migration OWNER TO postgres;
+ALTER TABLE public.schema_migration OWNER TO slvjtpvoyxjyff;
 
 --
--- Name: users; Type: TABLE; Schema: public; Owner: postgres
+-- Name: users; Type: TABLE; Schema: public; Owner: slvjtpvoyxjyff
 --
 
 CREATE TABLE public.users (
@@ -115,10 +117,10 @@ CREATE TABLE public.users (
 );
 
 
-ALTER TABLE public.users OWNER TO postgres;
+ALTER TABLE public.users OWNER TO slvjtpvoyxjyff;
 
 --
--- Name: event_participants event_participants_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: event_participants event_participants_pkey; Type: CONSTRAINT; Schema: public; Owner: slvjtpvoyxjyff
 --
 
 ALTER TABLE ONLY public.event_participants
@@ -126,7 +128,7 @@ ALTER TABLE ONLY public.event_participants
 
 
 --
--- Name: events events_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: events events_pkey; Type: CONSTRAINT; Schema: public; Owner: slvjtpvoyxjyff
 --
 
 ALTER TABLE ONLY public.events
@@ -134,7 +136,7 @@ ALTER TABLE ONLY public.events
 
 
 --
--- Name: gifts gifts_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: gifts gifts_pkey; Type: CONSTRAINT; Schema: public; Owner: slvjtpvoyxjyff
 --
 
 ALTER TABLE ONLY public.gifts
@@ -142,7 +144,7 @@ ALTER TABLE ONLY public.gifts
 
 
 --
--- Name: participants participants_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: participants participants_pkey; Type: CONSTRAINT; Schema: public; Owner: slvjtpvoyxjyff
 --
 
 ALTER TABLE ONLY public.participants
@@ -150,7 +152,7 @@ ALTER TABLE ONLY public.participants
 
 
 --
--- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: slvjtpvoyxjyff
 --
 
 ALTER TABLE ONLY public.users
@@ -158,14 +160,14 @@ ALTER TABLE ONLY public.users
 
 
 --
--- Name: schema_migration_version_idx; Type: INDEX; Schema: public; Owner: postgres
+-- Name: schema_migration_version_idx; Type: INDEX; Schema: public; Owner: slvjtpvoyxjyff
 --
 
 CREATE UNIQUE INDEX schema_migration_version_idx ON public.schema_migration USING btree (version);
 
 
 --
--- Name: event_participants event_participants_id_fk_event_id; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: event_participants event_participants_id_fk_event_id; Type: FK CONSTRAINT; Schema: public; Owner: slvjtpvoyxjyff
 --
 
 ALTER TABLE ONLY public.event_participants
@@ -173,7 +175,7 @@ ALTER TABLE ONLY public.event_participants
 
 
 --
--- Name: event_participants event_participants_id_fk_user_id; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: event_participants event_participants_id_fk_user_id; Type: FK CONSTRAINT; Schema: public; Owner: slvjtpvoyxjyff
 --
 
 ALTER TABLE ONLY public.event_participants
@@ -181,11 +183,44 @@ ALTER TABLE ONLY public.event_participants
 
 
 --
--- Name: events events_id_fk_gift_id; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: events events_id_fk_gift_id; Type: FK CONSTRAINT; Schema: public; Owner: slvjtpvoyxjyff
 --
 
 ALTER TABLE ONLY public.events
     ADD CONSTRAINT events_id_fk_gift_id FOREIGN KEY (gift_id) REFERENCES public.gifts(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: events events_id_fk_user_id; Type: FK CONSTRAINT; Schema: public; Owner: slvjtpvoyxjyff
+--
+
+ALTER TABLE ONLY public.events
+    ADD CONSTRAINT events_id_fk_user_id FOREIGN KEY (user_id) REFERENCES public.users(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: gifts gifts_id_fk_user_id; Type: FK CONSTRAINT; Schema: public; Owner: slvjtpvoyxjyff
+--
+
+ALTER TABLE ONLY public.gifts
+    ADD CONSTRAINT gifts_id_fk_user_id FOREIGN KEY (user_id) REFERENCES public.users(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: SCHEMA public; Type: ACL; Schema: -; Owner: slvjtpvoyxjyff
+--
+
+REVOKE ALL ON SCHEMA public FROM postgres;
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
+GRANT ALL ON SCHEMA public TO slvjtpvoyxjyff;
+GRANT ALL ON SCHEMA public TO PUBLIC;
+
+
+--
+-- Name: LANGUAGE plpgsql; Type: ACL; Schema: -; Owner: postgres
+--
+
+GRANT ALL ON LANGUAGE plpgsql TO slvjtpvoyxjyff;
 
 
 --

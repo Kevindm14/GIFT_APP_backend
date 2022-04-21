@@ -4,7 +4,14 @@ create_table("gifts"){
   t.Column("title", "string", {default: ""})
   t.Column("video", "string", {})
   t.Column("video_url", "text", {})
-  t.Column("qr", "string", {})
+  t.Column("qr", "text", {})
+  t.Column("user_id", "uuid", {})
 
   t.Timestamps()
 }
+
+add_foreign_key("gifts", "user_id", {"users": ["id"]}, {
+    "name": "gifts_id_fk_user_id",
+    "on_delete": "CASCADE",
+    "on_update": "CASCADE",
+})

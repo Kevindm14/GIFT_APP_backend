@@ -17,7 +17,7 @@ type User struct {
 	LastName       string    `json:"last_name" db:"last_name"`
 	Email          string    `json:"email" db:"email"`
 	Password       string    `json:"password" db:"-"`
-	PasswordHash   string    `json:"password_hash" db:"password_hash"`
+	PasswordHash   string    `json:"-" db:"password_hash"`
 	PhoneNumber    string    `json:"phone_number" db:"phone_number"`
 	PhoneExtension string    `json:"phone_extension" db:"phone_extension"`
 

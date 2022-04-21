@@ -11,8 +11,9 @@ import (
 )
 
 type Gift struct {
-	ID   uuid.UUID `json:"id" db:"id"`
-	Code uuid.UUID `json:"code" db:"code"`
+	ID     uuid.UUID `json:"id" db:"id"`
+	Code   uuid.UUID `json:"code" db:"code"`
+	UserID uuid.UUID `json:"user_id" db:"user_id"`
 
 	Title    string `json:"title" db:"title"`
 	Video    string `json:"video" db:"video"`

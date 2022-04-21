@@ -1,6 +1,7 @@
 package authorization
 
 import (
+	"fmt"
 	"livegift_back/libraries/jwt"
 	"livegift_back/libraries/response"
 	"net/http"
@@ -17,7 +18,9 @@ func Authorizator(next buffalo.Handler) buffalo.Handler {
 		c.Logger().Info(">>>> Authorization MW")
 
 		authorization := c.Request().Header.Get("Authorization")
-		tokenString, err := tokenFromAuthorization(authorization)
+		fmt.Println("======================> ", authorization)
+
+		tokenString, err := TokenFromAuthorization(authorization)
 		if err != nil {
 			return response.HTTPError(c.Response(), c.Request(), http.StatusUnauthorized, err.Error())
 		}

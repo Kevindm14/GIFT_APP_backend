@@ -42,8 +42,26 @@ func ListGift(c buffalo.Context) error {
 		return errors.New("error trying to connnect to database")
 	}
 
-	var gifts models.Gifts
+	gifts := models.Gifts{}
 	if err := tx.All(&gifts); err != nil {
+		return err
+	}
+
+	mapJson := response.Map{
+		"gifts": gifts,
+	}
+
+	return response.JSON(c.Response(), c.Request(), http.StatusCreated, mapJson)
+}
+
+func ListGiftsUsers(c buffalo.Context) error {
+	tx, ok := c.Value("tx").(*pop.Connection)
+	if !ok {
+		return errors.New("error trying to connnect to database")
+	}
+
+	gifts := models.Gifts{}
+	if err := tx.Where("user_id = ?", c.Param("user_id")).All(&gifts); err != nil {
 		return err
 	}
 
@@ -84,9 +102,10 @@ func CreateGift(c buffalo.Context) error {
 		gift.VideoURL = secureURL
 	}
 
-	gift.Code = uuid.FromStringOrNil(c.Request().FormValue("code"))
+	gift.Code = uuid.FromStringOrNil(c.Request().FormValue("giftID"))
 	gift.Title = c.Request().FormValue("title")
-	gift.Qr = c.Request().FormValue("qr")
+	gift.Qr = c.Request().FormValue("qrImage")
+	gift.UserID = uuid.FromStringOrNil(c.Request().FormValue("userID"))
 
 	if err := tx.Create(&gift); err != nil {
 		return err

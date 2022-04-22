@@ -18,9 +18,10 @@ func SetRoutes(app *buffalo.App) *buffalo.App {
 	authRoutes.POST("/signup", authuser.AuthRegister)
 	authRoutes.Middleware.Remove(authorization.Authorizator)
 
+	app.GET("/{gift_id}/view", gifts.ShowGift)
+
 	giftRoutes := app.Group("/gifts")
 	giftRoutes.GET("/", gifts.ListGift)
-	giftRoutes.GET("/show/{gift_id}/view", gifts.ShowGift)
 	giftRoutes.GET("/{user_id}", gifts.ListGiftsUsers)
 	giftRoutes.GET("/qr/view", gifts.GenerateQRCode)
 	giftRoutes.POST("/create", gifts.CreateGift)

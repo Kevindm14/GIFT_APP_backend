@@ -22,7 +22,7 @@ var (
 
 func GenerateQRCode(c buffalo.Context) error {
 	gift := models.Gift{Code: uuid.Must(uuid.NewV4())}
-	image, err := qr.CodeForGift("http://localhost:3003", gift.Code.String())
+	image, err := qr.CodeForGift("https://gift-front-react.vercel.app", gift.Code.String())
 	if err != nil {
 		return err
 	}

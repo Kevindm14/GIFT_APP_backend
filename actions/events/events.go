@@ -79,7 +79,7 @@ func DeleteEvent(c buffalo.Context) error {
 	}
 
 	event := models.Event{}
-	if err := tx.Find(&event, c.Request().FormValue("event_id")); err != nil {
+	if err := tx.Find(&event, c.Param("event_id")); err != nil {
 		return err
 	}
 

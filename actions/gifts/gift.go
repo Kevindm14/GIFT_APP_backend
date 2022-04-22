@@ -22,7 +22,7 @@ var (
 
 func GenerateQRCode(c buffalo.Context) error {
 	gift := models.Gift{Code: uuid.Must(uuid.NewV4())}
-	image, err := qr.CodeForGift(baseURL, gift.Code.String())
+	image, err := qr.CodeForGift("http://localhost:3003", gift.Code.String())
 	if err != nil {
 		return err
 	}
@@ -127,7 +127,7 @@ func DeleteGift(c buffalo.Context) error {
 	}
 
 	gift := models.Gift{}
-	if err := tx.Find(&gift, c.Request().FormValue("gift_id")); err != nil {
+	if err := tx.Find(&gift, c.Param("gift_id")); err != nil {
 		return err
 	}
 
@@ -138,6 +138,25 @@ func DeleteGift(c buffalo.Context) error {
 	mapJson := response.Map{
 		"status":  http.StatusOK,
 		"message": "El gift ha sido eliminado correctamente",
+	}
+
+	return response.JSON(c.Response(), c.Request(), http.StatusOK, mapJson)
+}
+
+func ShowGift(c buffalo.Context) error {
+	tx, ok := c.Value("tx").(*pop.Connection)
+	if !ok {
+		return errors.New("error trying to connnect to database")
+	}
+
+	gift := models.Gift{}
+	if err := tx.Where("code = ?", c.Param("gift_id")).First(&gift); err != nil {
+		return err
+	}
+
+	mapJson := response.Map{
+		"status": http.StatusOK,
+		"gift":   gift,
 	}
 
 	return response.JSON(c.Response(), c.Request(), http.StatusOK, mapJson)

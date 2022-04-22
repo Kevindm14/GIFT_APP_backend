@@ -20,10 +20,11 @@ func SetRoutes(app *buffalo.App) *buffalo.App {
 
 	giftRoutes := app.Group("/gifts")
 	giftRoutes.GET("/", gifts.ListGift)
+	giftRoutes.GET("/show/{gift_id}/view", gifts.ShowGift)
 	giftRoutes.GET("/{user_id}", gifts.ListGiftsUsers)
 	giftRoutes.GET("/qr/view", gifts.GenerateQRCode)
 	giftRoutes.POST("/create", gifts.CreateGift)
-	giftRoutes.DELETE("/delete/", gifts.DeleteGift)
+	giftRoutes.DELETE("/{gift_id}/", gifts.DeleteGift)
 
 	userRoutes := app.Group("/users")
 	userRoutes.GET("/", users.Index)
@@ -31,7 +32,7 @@ func SetRoutes(app *buffalo.App) *buffalo.App {
 	eventRoutes := app.Group("/events")
 	eventRoutes.GET("/", events.Index)
 	eventRoutes.POST("/create", events.Create)
-	eventRoutes.DELETE("/delete/", events.DeleteEvent)
+	eventRoutes.DELETE("/{event_id}/", events.DeleteEvent)
 
 	return app
 }
